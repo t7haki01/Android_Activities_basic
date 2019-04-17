@@ -3,7 +3,10 @@ package com.example.lab3_part2;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Layout;
@@ -12,8 +15,16 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
@@ -42,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        LinearLayout.LayoutParams mapBtnLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams mapBtnLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         mapBtn.setLayoutParams(mapBtnLayoutParam);
 
@@ -56,27 +67,29 @@ public class MainActivity extends AppCompatActivity {
 
         callBtn.setText("CREATE CALL");
 
-        LinearLayout.LayoutParams callBtnLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams callBtnLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
 
         callBtn.setLayoutParams(callBtnLayoutParam);
 
 
         LinearLayout webLayout = new LinearLayout(this);
 
-        ViewGroup.LayoutParams webParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+        ViewGroup.LayoutParams webParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
         webLayout.setOrientation(LinearLayout.HORIZONTAL);
 
         webLayout.setLayoutParams(webParams);
 
         editText = new EditText(this);
-        ViewGroup.LayoutParams editParams = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        ViewGroup.LayoutParams editParams = new LinearLayout.LayoutParams(600, ViewGroup.LayoutParams.WRAP_CONTENT);
         editText.setLayoutParams(editParams);
 
 
         Button webBtn = new Button(this);
         webBtn.setText("GO");
-            LinearLayout.LayoutParams webBtnLayoutParam = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+
+        LinearLayout.LayoutParams webBtnLayoutParam = new LinearLayout.LayoutParams(180, ViewGroup.LayoutParams.WRAP_CONTENT);
         webBtn.setLayoutParams(webBtnLayoutParam);
+
         webBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -92,6 +105,17 @@ public class MainActivity extends AppCompatActivity {
         webLayout.addView(webBtn);
 
         mainLayout.addView(webLayout);
+
+        ImageView imageView = new ImageView(this);
+
+        LinearLayout.LayoutParams imageLayout = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        imageView.setLayoutParams(imageLayout);
+
+        String imageAddress = "https://www.oamk.fi/files/3115/2887/8059/Toimistokayttoon_Suomeksi-06.png";
+
+        new DownLoadImageTask(imageView).execute(imageAddress);
+
+        mainLayout.addView(imageView);
 
         setContentView(mainLayout);
     }
@@ -155,3 +179,36 @@ public class MainActivity extends AppCompatActivity {
             startActivity(webIntent);
     }
 }
+
+class DownLoadImageTask extends AsyncTask<String,Void,Bitmap>{
+    ImageView imageView;
+
+    public DownLoadImageTask(ImageView imageView){
+        this.imageView = imageView;
+    }
+
+    protected Bitmap doInBackground(String...urls){
+
+        URL imageUri = null;
+
+        try{
+            imageUri = new URL(urls[0]);
+        }catch(MalformedURLException e){
+            e.printStackTrace();
+        }
+        Bitmap bitmap = null;
+        try{
+            bitmap = BitmapFactory.decodeStream(imageUri.openConnection() .getInputStream());
+        }catch(IOException e){
+            e.printStackTrace();
+        }
+        return bitmap;
+    }
+    protected void onPostExecute(Bitmap result){
+        imageView.setImageBitmap(result);
+    }
+}
+
+
+
+
