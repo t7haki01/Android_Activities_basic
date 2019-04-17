@@ -39,6 +39,18 @@ public class MainActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater menuInflater = getMenuInflater();
         menuInflater.inflate(R.menu.main_menu, menu);
+        mammalsOption();
+        return true;
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        super.onPrepareOptionsMenu(menu);
+        /**
+         * Seems like in this point, set checked is meaningless cause
+         * image is allocated when recognized by checked menu option item
+         * */
+//        menu.findItem(R.id.option_mammals).setChecked(true);
         return true;
     }
 
