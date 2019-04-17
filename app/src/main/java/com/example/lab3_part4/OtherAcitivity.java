@@ -1,6 +1,7 @@
 package com.example.lab3_part4;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.CountDownTimer;
 import android.support.constraint.ConstraintLayout;
@@ -50,9 +51,14 @@ public class OtherAcitivity extends AppCompatActivity {
             @Override
             public void onFinish() {
                 textView.setText("Done!");
+                ringTheBell();
             }
         }.start();
+    }
 
-
+    private void ringTheBell(){
+        MediaPlayer mediaPlayer;
+        mediaPlayer = MediaPlayer.create(this, R.raw.ring);
+        mediaPlayer.start();
     }
 }
