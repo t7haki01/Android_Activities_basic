@@ -52,6 +52,7 @@ public class OtherAcitivity extends AppCompatActivity {
             public void onFinish() {
                 textView.setText("Done!");
                 ringTheBell();
+                finish();
             }
         }.start();
     }
