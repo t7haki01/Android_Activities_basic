@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity {
             ResolveInfo resolveInfo = activities.get(i);
             String packageName = resolveInfo.activityInfo.packageName;
             if(packageName.contains("android.maps")){
-                mapIntent.setPackage(packageName);
+                gMapIntent.setPackage(packageName);
             }
         }
 
@@ -169,13 +169,13 @@ public class MainActivity extends AppCompatActivity {
         Uri webpage = Uri.parse(httpAddress);
         Intent webIntent = new Intent(Intent.ACTION_VIEW, webpage);
 
-//        PackageManager packageManager = getPackageManager();
-//        List<ResolveInfo> activities = packageManager.queryIntentActivities(webIntent, 0);
-//        boolean isIntentSafe = activities.size() > 0;
+        PackageManager packageManager = getPackageManager();
+        List<ResolveInfo> activities = packageManager.queryIntentActivities(webIntent, 0);
+        boolean isIntentSafe = activities.size() > 0;
 
-//        Log.d("From webBtn", ""+activities);
+        Log.d("From webBtn", ""+activities);
 
-//        if(isIntentSafe)
+        if(isIntentSafe)
             startActivity(webIntent);
     }
 }
